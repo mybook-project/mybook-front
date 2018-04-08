@@ -24,6 +24,7 @@
     "bootstrap": "^4.0.0",
     "core-js": "^2.4.1",
     "jquery": "^3.3.1",
+    "ng2-search-filter": "^0.4.7",
     "rxjs": "^5.5.7",
     "zone.js": "^0.8.19"
   },

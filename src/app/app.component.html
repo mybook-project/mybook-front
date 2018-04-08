@@ -1,22 +1,24 @@
-<!--<h2>Books</h2>-->
-<!--<ul>-->
-  <!--<li *ngFor="let book of books">{{book.title}}</li>-->
-<!--</ul>-->
 <div class="container-fluid">
   <div class="row">
-    <nav class="navbar bg-dark col-12">
-      <form class="form-inline mx-auto col-6">
-        <input class="form-control mx-2 col-8" type="search" placeholder="Tytuł..." aria-label="Wyszukaj">
-        <button class="btn btn-outline-info mx-2 col-auto" type="submit">Wyszukaj</button>
-      </form>
+    <nav class="navbar bg-dark col-12 d-flex justify-content-between">
+      <div class="col-3 d-flex justify-content-start"></div>
+        <form class="form-inline col-6 d-flex justify-content-center">
+          <input class="form-control mx-2 col-9" type="search" placeholder="Tytuł..." aria-label="Wyszukaj">
+          <button class="btn btn-outline-info mx-2 col-2" type="submit">Wyszukaj</button>
+        </form>
+      <div class="col-3 d-flex justify-content-end">
+        <button *ngIf="loggedUser !== ''" class="btn btn-outline-light mx-2 col-auto" disabled type="button">Witaj: {{loggedUser}}</button>
+        <button *ngIf="loggedUser === ''" (click)="page = 'loginPage'" class="btn btn-outline-warning mx-2 col-auto" type="button">Zaloguj</button>
+        <button *ngIf="loggedUser !== ''" (click)="loggedUser = '' ; user = null" class="btn btn-outline-warning mx-2 col-auto" type="button">Wyloguj</button>
+      </div>
     </nav>
   </div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="page === 'bookList'">
   <div class="row">
     <div class="card col-8 p-4 my-5 mx-auto ">
       <div class="card-columns">
-        <div class="card   p-0" *ngFor="let book of books; let i=index">
+        <div class="card   p-0" *ngFor="let book of books ; let i=index">
           <img class="card-img-top bg-dark" src="../assets/bookn.png" alt="default book image">
           <h6 class="card-header bg-card text-center">{{book.title}}</h6>
           <div class="card-body bg-light  ">
@@ -41,6 +43,25 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid" *ngIf="page === 'loginPage'">
+  <div class="row">
+    <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
+      <div class="row mx-1 mb-1 mt-3">
+        <input class="form-control col-12" type="text" placeholder="Login" aria-label="Login" #nameInput>
+      </div>
+      <div class="row m-1">
+        <input class="form-control col-12" type="password" placeholder="Hasło" aria-label="Hasło" #passInput>
+      </div>
+      <div class="row d-flex justify-content-between m-1 btn-group">
+        <button class="btn btn-info col-6" (click)="page = 'bookList' ; error = ''" type="button">Powrót</button>
+        <button class="btn btn-success col-6" (click)="doLogin()" type="submit">Zaloguj</button>
+      </div>
+      <div class="row m-1">
+        <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
       </div>
     </div>
   </div>

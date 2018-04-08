@@ -15,4 +15,8 @@ export class DemoService {
   getBooks() {
     return this.http.get('http://localhost:8080/api/book/all');
   }
+
+  getUser(name: string) {
+    return this.http.get('http://localhost:8080/api/user/' + name);
+  }
 }
