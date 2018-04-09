@@ -50,19 +50,21 @@
 <div class="container-fluid" *ngIf="page === 'loginPage'">
   <div class="row">
     <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
-      <div class="row mx-1 mb-1 mt-3">
-        <input class="form-control col-12" type="text" placeholder="Login" aria-label="Login" #nameInput>
-      </div>
-      <div class="row m-1">
-        <input class="form-control col-12" type="password" placeholder="Hasło" aria-label="Hasło" #passInput>
-      </div>
-      <div class="row d-flex justify-content-between m-1 btn-group">
-        <button class="btn btn-info col-6" (click)="page = 'bookList' ; error = ''" type="button">Powrót</button>
-        <button class="btn btn-success col-6" (click)="doLogin()" type="submit">Zaloguj</button>
-      </div>
-      <div class="row m-1">
-        <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
-      </div>
+      <form>
+        <div class="row mx-1 mb-1 mt-3">
+          <input class="form-control col-12" type="text" placeholder="Login" aria-label="Login" #nameInput>
+        </div>
+        <div class="row m-1">
+          <input class="form-control col-12" type="password" placeholder="Hasło" aria-label="Hasło" #passInput>
+        </div>
+        <div class="row d-flex justify-content-between my-2 mx-1 btn-group">
+          <button class="btn btn-info col-6" (click)="page = 'bookList' ; error = ''" type="button">Powrót</button>
+          <button class="btn btn-success col-6" (click)="doLogin()" type="submit">Zaloguj</button>
+        </div>
+        <div class="row m-1">
+          <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
