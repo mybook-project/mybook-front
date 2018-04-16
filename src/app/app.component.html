@@ -1,7 +1,10 @@
 <div class="container-fluid">
   <div class="row">
     <nav class="navbar bg-dark col-12 d-flex justify-content-between">
-      <div class="col-3 d-flex justify-content-start"></div>
+      <div class="col-3 d-flex justify-content-start">
+        <button  (click)="page = 'profilePage'" class="btn btn-outline-success mx-2 col-auto" type="button">Mój profil</button>
+        <!--*ngIf="loggedUser !== ''"-->
+      </div>
         <form class="form-inline col-6 d-flex justify-content-center">
           <input class="form-control mx-2 col-9" type="search" placeholder="Tytuł..." aria-label="Wyszukaj">
           <button class="btn btn-outline-info mx-2 col-2" type="submit">Wyszukaj</button>
@@ -9,7 +12,7 @@
       <div class="col-3 d-flex justify-content-end">
         <button *ngIf="loggedUser !== ''" class="btn btn-outline-light mx-2 col-auto" disabled type="button">Witaj: {{loggedUser}}</button>
         <button *ngIf="loggedUser === ''" (click)="page = 'loginPage'" class="btn btn-outline-warning mx-2 col-auto" type="button">Zaloguj</button>
-        <button *ngIf="loggedUser !== ''" (click)="loggedUser = '' ; user = null" class="btn btn-outline-warning mx-2 col-auto" type="button">Wyloguj</button>
+        <button *ngIf="loggedUser !== ''" (click)="loggedUser = '' ; user = null; page = 'loginPage'" class="btn btn-outline-warning mx-2 col-auto" type="button">Wyloguj</button>
       </div>
     </nav>
   </div>
@@ -65,6 +68,89 @@
           <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+<div class="container-fluid" *ngIf="page === 'profilePage'">
+  <div class="row">
+    <div class="card  col-8 p-4 my-5 mx-auto">
+      <div class="card-header">Profil:</div>
+      <div class="card-group">
+        <div class="card col-4 bg-light">
+          <div class="card-body">
+            <h5 class="card-title text-center">Dane użytkownika</h5>
+            <div class="row">
+              <p>Nazwa: </p>
+            </div>
+            <div class="row">
+              <p>Mail: </p>
+            </div>
+            <div class="row">
+              <p>Wiek: </p>
+            </div>
+            <div class="row">
+              <p>Płeć: </p>
+            </div>
+            <button class="btn btn-info col-12" type="button">Edytuj</button>
+          </div>
+        </div>
+        <div class="card col-8 bg-light p-0">
+          <div class="card-header text-center">
+            <h5>Moje książki</h5>
+            <div class="row">
+              <nav class="navbar navbar-light bg-dark d-flex justify-content-between col-12 px-2">
+                <button class="btn btn-success col-auto ml-1" type="button">Wszystkie</button>
+                <button class="btn btn-primary col-auto ml-1" type="button">Przeczytane</button>
+                <button class="btn btn-warning col-auto ml-1" type="button">W trakcie</button>
+                <button class="btn btn-danger col-auto ml-1" type="button">Na potem</button>
+                <button class="btn btn-info col-auto ml-1" type="button" data-toggle="collapse" data-target="#collapseSearch" aria-expanded="false" aria-controls="collapseExample">?</button>
+              </nav>
+            </div>
+            <div class="row">
+              <div class="collapse col-12 px-0" id="collapseSearch">
+                <form class="form-inline col-12 bg-dark py-2">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-info my-2 my-sm-0" type="submit">Szukaj</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="card-body bg-secondary">
+            <div class="card my-5 p-0" *ngFor="let book of books ; let i=index">
+              <img class="card-img-top bg-dark" src="../assets/bookn.png" alt="default book image">
+              <h6 class="card-header bg-card text-center">{{book.title}}</h6>
+              <div class="card-body bg-light  ">
+                <div class="row d-flex justify-content-around">
+                  <button class="alert alert-warning p-2 ">Autor: {{book.author}}</button>
+                  <button class="alert alert-primary p-2 ">Gatunek: {{book.genre}}</button>
+                  <button class="alert alert-success p-2 ">{{book.pages}}s.</button>
+                  <button class="alert alert-info p-2 ">Typ:</button>
+                </div>
+                <div class="row d-flex justify-content-around">
+                  <button class="alert alert-secondary p-2 ">Ocena:</button>
+                  <button class="alert alert-danger p-2 ">Status:</button>
+                  <button class="alert alert-light p-2 ">Obecna strona:</button>
+                  <button class="alert alert-dark p-2 ">Czas:</button>
+                </div>
+                <div class="row">
+                  <button class="btn btn-outline-info col-12" type="button" data-toggle="collapse"  [attr.data-target]="'#'+i" aria-expanded="false" aria-controls="collapseExample">
+                    Opis książki
+                  </button>
+                  <div class="collapse col-12" [attr.id]="i">
+                    <div class="card mt-3">
+                      <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                          <p class="font-italic">{{book.description}}</p>
+                        </blockquote>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
