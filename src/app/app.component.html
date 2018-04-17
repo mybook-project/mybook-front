@@ -2,8 +2,7 @@
   <div class="row">
     <nav class="navbar bg-dark col-12 d-flex justify-content-between">
       <div class="col-3 d-flex justify-content-start">
-        <button  (click)="page = 'profilePage'" class="btn btn-outline-success mx-2 col-auto" type="button">Mój profil</button>
-        <!--*ngIf="loggedUser !== ''"-->
+        <button *ngIf="loggedUser !== ''" (click)="page = 'profilePage'" class="btn btn-outline-success mx-2 col-auto" type="button">Mój profil</button>
       </div>
         <form class="form-inline col-6 d-flex justify-content-center">
           <input class="form-control mx-2 col-9" type="search" placeholder="Tytuł..." aria-label="Wyszukaj">
@@ -80,16 +79,16 @@
           <div class="card-body">
             <h5 class="card-title text-center">Dane użytkownika</h5>
             <div class="row">
-              <p>Nazwa: </p>
+              <p>Nazwa: {{user.name}}</p>
             </div>
             <div class="row">
-              <p>Mail: </p>
+              <p>Mail: {{user.email}} </p>
             </div>
             <div class="row">
-              <p>Wiek: </p>
+              <p>Wiek: {{user.age}}</p>
             </div>
             <div class="row">
-              <p>Płeć: </p>
+              <p>Płeć: {{user.gender}} </p>
             </div>
             <button class="btn btn-info col-12" type="button">Edytuj</button>
           </div>
