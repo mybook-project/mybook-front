@@ -1,14 +1,18 @@
+<!---------------------------------Navbar------------------------------------------>
 <div class="container-fluid">
   <div class="row">
     <nav class="navbar bg-dark col-12 d-flex justify-content-between">
       <div class="col-3 d-flex justify-content-start">
+        <button  (click)="page = 'bookList'" class="btn btn-outline-primary mx-2 col-auto" type="button">Home</button>
         <button *ngIf="loggedUser !== ''" (click)="page = 'profilePage'" class="btn btn-outline-success mx-2 col-auto" type="button">Mój profil</button>
+        <button  (click)="page = 'stats'" class="btn btn-outline-warning mx-2 col-auto" type="button">Statystyki</button>
       </div>
         <form class="form-inline col-6 d-flex justify-content-center">
-          <input class="form-control mx-2 col-9" type="search" placeholder="Tytuł..." aria-label="Wyszukaj">
-          <button class="btn btn-outline-info mx-2 col-2" type="submit">Wyszukaj</button>
+          <input class="form-control mx-2 col-9" type="search" placeholder="Tytuł..." aria-label="Wyszukaj" #searchInput>
+          <button class="btn btn-outline-info mx-2 col-2" (click)="doSearch()" type="submit">Wyszukaj</button>
         </form>
       <div class="col-3 d-flex justify-content-end">
+        <button *ngIf="loggedUser === ''" (click)="page = 'registerPage' ; error = ''" class="btn btn-outline-warning mx-2 col-auto" type="button">Zarejestruj</button>
         <button *ngIf="loggedUser !== ''" class="btn btn-outline-light mx-2 col-auto" disabled type="button">Witaj: {{loggedUser}}</button>
         <button *ngIf="loggedUser === ''" (click)="page = 'loginPage'" class="btn btn-outline-warning mx-2 col-auto" type="button">Zaloguj</button>
         <button *ngIf="loggedUser !== ''" (click)="loggedUser = '' ; user = null; page = 'loginPage'" class="btn btn-outline-warning mx-2 col-auto" type="button">Wyloguj</button>
@@ -16,15 +20,19 @@
     </nav>
   </div>
 </div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------main page z ksiazkami------------------------------------------>
 <div class="container-fluid" *ngIf="page === 'bookList'">
   <div class="row">
     <div class="card col-8 p-4 my-5 mx-auto ">
       <div class="card-columns">
-        <div class="card   p-0" *ngFor="let book of books ; let i=index">
+        <div class="card   p-0" *ngFor="let book of booksCopy ; let i=index">
           <img class="card-img-top bg-dark" src="../assets/bookn.png" alt="default book image">
           <h6 class="card-header bg-card text-center">{{book.title}}</h6>
           <div class="card-body bg-light  ">
             <div class="row d-flex justify-content-around">
+              <button class="btn btn-outline-primary p-2" type="button" (click)="goBookComment(i)">k</button>
+              <button *ngIf="loggedUser !== ''" (click)="addBook(i)" class="btn btn-outline-primary p-2" type="button">+</button>
               <button class="alert alert-warning p-2 ">Autor: {{book.author}}</button>
               <button class="alert alert-primary p-2 ">Gatunek: {{book.genre}}</button>
               <button class="alert alert-success p-2 ">{{book.pages}}s.</button>
@@ -49,6 +57,8 @@
     </div>
   </div>
 </div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------ekran logowania------------------------------------------>
 <div class="container-fluid" *ngIf="page === 'loginPage'">
   <div class="row">
     <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
@@ -70,6 +80,8 @@
     </div>
   </div>
 </div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------Profil------------------------------------------>
 <div class="container-fluid" *ngIf="page === 'profilePage'">
   <div class="row">
     <div class="card  col-8 p-4 my-5 mx-auto">
@@ -90,7 +102,7 @@
             <div class="row">
               <p>Płeć: {{user.gender}} </p>
             </div>
-            <button class="btn btn-info col-12" type="button">Edytuj</button>
+            <button class="btn btn-info col-12" type="button" (click)="page = 'EditUserPage'">Edytuj</button>
           </div>
         </div>
         <div class="card col-8 bg-light p-0">
@@ -98,38 +110,39 @@
             <h5>Moje książki</h5>
             <div class="row">
               <nav class="navbar navbar-light bg-dark d-flex justify-content-between col-12 px-2">
-                <button class="btn btn-success col-auto ml-1" type="button">Wszystkie</button>
-                <button class="btn btn-primary col-auto ml-1" type="button">Przeczytane</button>
-                <button class="btn btn-warning col-auto ml-1" type="button">W trakcie</button>
-                <button class="btn btn-danger col-auto ml-1" type="button">Na potem</button>
+                <button class="btn btn-success col-auto ml-1" type="button" (click)="doWszystkieSort()">Wszystkie</button>
+                <button class="btn btn-primary col-auto ml-1" type="button" (click)="doPrzeczytaneSort()">Przeczytane</button>
+                <button class="btn btn-warning col-auto ml-1" type="button" (click)="doWtrakcieSort()">W trakcie</button>
+                <button class="btn btn-danger col-auto ml-1" type="button" (click)="doNapotemSort()">Na potem</button>
                 <button class="btn btn-info col-auto ml-1" type="button" data-toggle="collapse" data-target="#collapseSearch" aria-expanded="false" aria-controls="collapseExample">?</button>
               </nav>
             </div>
             <div class="row">
               <div class="collapse col-12 px-0" id="collapseSearch">
                 <form class="form-inline col-12 bg-dark py-2">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-info my-2 my-sm-0" type="submit">Szukaj</button>
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" #searchUserInput>
+                  <button class="btn btn-info my-2 my-sm-0" type="button" (click)="doUserStatsSearch()">Szukaj</button>
                 </form>
               </div>
             </div>
           </div>
           <div class="card-body bg-secondary">
-            <div class="card my-5 p-0" *ngFor="let book of books ; let i=index">
+            <div class="card my-5 p-0" *ngFor="let stat of currentUserStats ; let i=index">
               <img class="card-img-top bg-dark" src="../assets/bookn.png" alt="default book image">
-              <h6 class="card-header bg-card text-center">{{book.title}}</h6>
+              <h6 class="card-header bg-card text-center">{{stat.book.title}}</h6>
               <div class="card-body bg-light  ">
                 <div class="row d-flex justify-content-around">
-                  <button class="alert alert-warning p-2 ">Autor: {{book.author}}</button>
-                  <button class="alert alert-primary p-2 ">Gatunek: {{book.genre}}</button>
-                  <button class="alert alert-success p-2 ">{{book.pages}}s.</button>
-                  <button class="alert alert-info p-2 ">Typ:</button>
+                  <button class="btn btn-outline-primary p-2" type="button" (click)="editStat(i)" >Edytuj</button>
+                  <button class="alert alert-warning p-2 ">Autor: {{stat.book.author}}</button>
+                  <button class="alert alert-primary p-2 ">Gatunek: {{stat.book.genre}}</button>
+                  <button class="alert alert-success p-2 ">{{stat.book.pages}}s.</button>
+                  <button class="alert alert-info p-2 ">Typ: {{stat.type}}</button>
                 </div>
                 <div class="row d-flex justify-content-around">
-                  <button class="alert alert-secondary p-2 ">Ocena:</button>
-                  <button class="alert alert-danger p-2 ">Status:</button>
-                  <button class="alert alert-light p-2 ">Obecna strona:</button>
-                  <button class="alert alert-dark p-2 ">Czas:</button>
+                  <button class="alert alert-secondary p-2 ">Ocena: {{stat.score}}</button>
+                  <button class="alert alert-danger p-2 ">Status: {{stat.status}}</button>
+                  <button class="alert alert-light p-2 ">Obecna strona: {{stat.currentPage}}</button>
+                  <button class="alert alert-dark p-2 ">Czas: {{stat.time}}</button>
                 </div>
                 <div class="row">
                   <button class="btn btn-outline-info col-12" type="button" data-toggle="collapse"  [attr.data-target]="'#'+i" aria-expanded="false" aria-controls="collapseExample">
@@ -139,7 +152,7 @@
                     <div class="card mt-3">
                       <div class="card-body">
                         <blockquote class="blockquote mb-0">
-                          <p class="font-italic">{{book.description}}</p>
+                          <p class="font-italic">{{stat.book.description}}</p>
                         </blockquote>
                       </div>
                     </div>
@@ -153,3 +166,238 @@
     </div>
   </div>
 </div>
+<!---------------------------------Wykresy------------------------------------------>
+<div class="container-fluid" *ngIf="page === 'stats'">
+  <div class="row">
+    <div class="card col-10 p-4 my-5 mx-auto ">
+      <div class="row">
+        <div class="col-6">
+          <img style="width: 500px" src="../assets/kk.png">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------Strona Rejestracji------------------------------------------>
+<div class="container-fluid" *ngIf="page === 'registerPage'">
+  <div class="row">
+    <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
+      <form>
+        <div class="row mx-1 mb-1 mt-3">
+          <input class="form-control col-12" type="text" placeholder="Login" aria-label="Login" #nameRegInput>
+        </div>
+        <div class="row m-1">
+          <input class="form-control col-12" type="password" placeholder="Hasło" aria-label="Hasło" #passRegInput>
+        </div>
+        <div class="row m-1">
+          <input class="form-control col-12" type="text" placeholder="Email" aria-label="Email" #mailInput>
+        </div>
+        <!--<div class="row m-1">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Płeć" aria-label="Płeć" #genderInput>-->
+        <!--</div>-->
+
+        Płeć:
+        <select #genderInput>
+          <option value="Mezczyzna">Mezczyzna</option>
+          <option value="Kobieta">Kobieta</option>
+          <option value="Transgender">Transgender</option>
+        </select>
+
+        <div class="row m-1">
+          <input class="form-control col-12" type="number" placeholder="Wiek" aria-label="Wiek" #ageInput>
+        </div>
+        <div class="row d-flex justify-content-between my-2 mx-1 btn-group">
+          <button class="btn btn-info col-6" (click)="page = 'bookList' ; error = ''" type="button">Powrót</button>
+          <button class="btn btn-success col-6" (click)="doRegister()" type="button">Zarejestruj</button>
+        </div>
+        <div class="row m-1">
+          <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------Dodawanie ksiazki do kolekcji------------------------------------------>
+<div class="container-fluid" *ngIf="page === 'addBookPage'">
+  <div class="row">
+    <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
+      <form>
+        <!--<div class="row mx-1 mb-1 mt-3">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Score" aria-label="Score" #scoreInput>-->
+        <!--</div>-->
+        <!--<div class="row m-1">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Status" aria-label="Status" #statusInput>-->
+        <!--</div>-->
+        <!--<div class="row m-1">-->
+        <!--<input class="form-control col-12" type="text" placeholder="Typ" aria-label="Typ" #typeInput>-->
+        <!--</div>-->
+        Ocena:
+        <select #scoreInput>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        Status:
+        <select #statusInput>
+          <option value="Przeczytane">Przeczytane</option>
+          <option value="W trakcie">W trakcie</option>
+          <option value="Na potem">Na potem</option>
+        </select>
+        Typ:
+        <select #typeInput>
+          <option value="Papierowa">Papierowa</option>
+          <option value="Ebook">Ebook</option>
+        </select>
+        <div class="row m-1">
+          <input class="form-control col-12" type="number" placeholder="Czas (godziny)" aria-label="Czas" min="0" #timeInput>
+        </div>
+        <div class="row m-1">
+          <input class="form-control col-12" type="number" placeholder="Aktualna strona (max: {{currentBook.pages}}s.)" aria-label="Aktualna strona" max="{{currentBook.pages}}" min="0" #currentPageInput>
+        </div>
+        <div class="row d-flex justify-content-between my-2 mx-1 btn-group">
+          <button class="btn btn-info col-6" (click)="page = 'bookList' ; error = ''" type="button">Powrót</button>
+          <button class="btn btn-success col-6" (click)="saveBook()" type="submit">Dodaj</button>
+        </div>
+        <div class="row m-1">
+          <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------Edycja uzytkownika------------------------------------------>
+<div class="container-fluid" *ngIf="page === 'EditUserPage'">
+  <div class="row">
+    <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
+      <form>
+        <div class="row mx-1 mb-1 mt-3">
+          <input class="form-control col-12" type="text" placeholder="Login" aria-label="Login" value="{{user.name}}" #nameUpInput>
+        </div>
+        <div class="row m-1">
+          <input class="form-control col-12" type="password" placeholder="Hasło" aria-label="Hasło" value="{{user.password}}" #passUpInput>
+        </div>
+        <div class="row m-1">
+          <input class="form-control col-12" type="text" placeholder="Email" aria-label="Email" value="{{user.email}}" #mailUpInput>
+        </div>
+        <!--<div class="row m-1">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Płeć" aria-label="Płeć" value="{{user.gender}}" #genderUpInput>-->
+        <!--</div>-->
+        Płeć:
+        <select #genderUpInput>
+          <option value="{{user.gender}}">{{user.gender}}</option>
+          <option value="Mezczyzna">Mezczyzna</option>
+          <option value="Kobieta">Kobieta</option>
+          <option value="Transgender">Transgender</option>
+        </select>
+
+        <div class="row m-1">
+          <input class="form-control col-12" type="number" placeholder="Wiek" aria-label="Wiek" value="{{user.age}}" #ageUpInput>
+        </div>
+        <div class="row d-flex justify-content-between my-2 mx-1 btn-group">
+          <button class="btn btn-info col-6" (click)="page = 'profilePage' ; error = ''" type="button">Powrót</button>
+          <button class="btn btn-success col-6" (click)="doUpdateUser()" type="button">Zaktualizuj</button>
+        </div>
+        <div class="row m-1">
+          <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------Edytuj ksiazke w kolekcjii------------------------------------------>
+<div class="container-fluid" *ngIf="page === 'EditStat'">
+  <div class="row">
+    <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
+      <form>
+        Ocena:
+        <select #scoreEditInput>
+          <option value="{{statEdit.score}}">{{statEdit.score}}</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        Status:
+        <select #statusEditInput>
+          <option value="{{statEdit.status}}">{{statEdit.status}}</option>
+          <option value="Przeczytane">Przeczytane</option>
+          <option value="W trakcie">W trakcie</option>
+          <option value="Na potem">Na potem</option>
+        </select>
+        Typ:
+        <select #typeEditInput>
+          <option value="{{statEdit.type}}">{{statEdit.type}}</option>
+          <option value="Papierowa">Papierowa</option>
+          <option value="Ebook">Ebook</option>
+        </select>
+        <div class="row m-1">
+          <input class="form-control col-12" type="number" placeholder="Czas (godziny)" aria-label="Czas" min="0" value="{{statEdit.time}}" #timeEditInput>
+        </div>
+        <div class="row m-1">
+          <input class="form-control col-12" type="number" placeholder="Aktualna strona (max: {{statEdit.book.pages}}s.)" aria-label="Aktualna strona" value="{{statEdit.currentPage}}" max="{{statEdit.book.pages}}" min="0" #currentPageEditInput>
+        </div>
+        <!----------------------------------------------->
+        <!--<div class="row mx-1 mb-1 mt-3">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Score" aria-label="Score" value="{{statEdit.score}}" #scoreEditInput>-->
+        <!--</div>-->
+        <!--<div class="row m-1">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Status" aria-label="Status" value="{{statEdit.status}}" #statusEditInput>-->
+        <!--</div>-->
+        <!--<div class="row m-1">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Type" aria-label="Type" value="{{statEdit.type}}" #typeEditInput>-->
+        <!--</div>-->
+        <!--<div class="row m-1">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Time" aria-label="Time" value="{{statEdit.time}}" #timeEditInput>-->
+        <!--</div>-->
+        <!--<div class="row m-1">-->
+          <!--<input class="form-control col-12" type="text" placeholder="Current Page" aria-label="Current Page" value="{{statEdit.currentPage}}" #currentPageEditInput>-->
+        <!--</div>-->
+        <div class="row d-flex justify-content-between my-2 mx-1 btn-group">
+          <button class="btn btn-info col-6" (click)="page = 'profilePage' ; error = ''" type="button">Powrót</button>
+          <button class="btn btn-success col-6" (click)="saveEditStat()" type="button">Zaktualizuj</button>
+        </div>
+        <div class="row m-1">
+          <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--------------------------------------------------------------------------->
+<!---------------------------------Strona ksiazki z komentarzami------------------------------------------>
+<div class="container-fluid" *ngIf="page === 'bookComments'">
+  <div class="row">
+    <div class="card col-3 my-5 mx-auto d-flex justify-content-center bg-light">
+      <h2>Tytuł: {{currentBookComments.title}}</h2>
+      <p>Autor: {{currentBookComments.author}}</p>
+      <p>Wydawca: {{currentBookComments.publisher}}</p>
+      <p>Strony: {{currentBookComments.pages}}</p>
+      <p>Gatunek: {{currentBookComments.genre}}</p>
+      <p>Opis: {{currentBookComments.description}}</p>
+      <hr>
+      <h3>Komentarze:</h3>
+      <div *ngFor="let comment of currentBookComments.comments">
+        <p>{{comment.content}}</p>
+        <hr>
+      </div>
+      <form>
+        <div class="row">
+          <input class="form-control col-9" type="text" placeholder="comment" aria-label="comment" #commentInput>
+          <button class="btn btn-success col-3" (click)="AddComment()" type="button">Dodaj</button>
+        </div>
+        <button class="btn btn-info col-6" (click)="page = 'bookList' ; error = ''" type="button">Powrót</button>
+        <div class="row m-1">
+          <div class="alert alert-danger text-center col-12" *ngIf="error !== ''">{{ error }}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--------------------------------------------------------------------------->
